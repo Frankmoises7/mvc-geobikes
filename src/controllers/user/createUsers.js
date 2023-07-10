@@ -1,6 +1,5 @@
 const User = require('../../models/user')
 
-
 async function createUsers(req, res) {
     if(req.body != null){
         try {
