@@ -1,5 +1,5 @@
 {
-  "name": "link-tech-app-by-frank-islas",
+  "name": "geobikes-mvc",
   "version": "1.0.1",
   "main": "index.js",
   "scripts": {
@@ -14,8 +14,7 @@
   },
   "engines": {
     "node": ">=14 <15"
-  }
-  ,
+  },
   "dependencies": {
     "-": "^0.0.1",
     "bcrypt": "^5.1.0",
@@ -32,9 +31,12 @@
     "handlebars": "^4.7.7",
     "hbs": "^4.2.0",
     "mongoose": "^5.6.0",
+    "mongoose-findorcreate": "^4.0.0",
     "morgan": "^1.10.0",
     "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^8.0.0",
     "path": "^0.12.7",
     "shortid": "^2.2.16"
   },

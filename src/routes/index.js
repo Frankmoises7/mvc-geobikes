@@ -1,81 +1,89 @@
-const router = require('express').Router();
+require('dotenv').config();
 const express = require('express');
 const passport = require('passport');
-const bodyparser = require('body-parser');
-const ShortUrl = require('../models/shortUrl')
-const ensureAuthenticated = require('../middleware/ensureAuthenticated')
-
-const path = require('path')
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const router = express.Router();
+const passportLocalMongoose = require('passport-local-mongoose');
+const findOrCreate = require('mongoose-findorcreate');
+const mongoose = require('mongoose');
+const User = require('../models/user')
 
 const app = express();
 
+app.use(passport.initialize());
+app.use(passport.session());
 
-/* app.set('view engine', 'hbs')
-app.use(express.urlencoded({ extended: false }))
-app.use(express.static(path.join(__dirname + '/public'))); */
+// <--------------------- USUARIOS ------------------------>
 
+passport.use(User.createStrategy());
 
-// capturar body
-app.use(bodyparser.urlencoded({ extended: false }));
-app.use(bodyparser.json());
+// <--------------- Serializar - Deserializar ------------->
 
-router.get('/', (req, res) => {
-  res.render('home')
-})
-
-router.get('/home', ensureAuthenticated, async (req, res) => {
-  res.render('home')
-})
-
-router.get('/register', (req, res, next) => {
-  res.render('register');
+passport.serializeUser(function(user, cb) {
+  process.nextTick(function() {
+    cb(null, { id: user.id });
+  });
 });
 
-router.post('/register', passport.authenticate('local-signup', {
-  successRedirect: '/home',
-  failureRedirect: '/register',
-  failureFlash: true
-})); 
+passport.deserializeUser(function(user, cb) {
+  process.nextTick(function() {
+    return cb(null, user);
+  });
+});
+
+// <--------------- Serializar - Deserializar ------------->
+
+// <--------------- configuracion de google ------------->
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: "http://localhost:3000/auth/google/mapa"
+    },
+    function(accessToken, refreshToken, profile, cb) {
+      console.log(profile);
+      User.findOrCreate(
+        { id: profile.id },
+        { name: profile.displayName, email: profile.emails[0].value, idAdmin: false },
+        function(err, user) {
+          return cb(err, user);
+        }
+      );
+    }
+  )
+);
+
+// <--------------- configuracion de google ------------->
+
+router.get('/', (req, res, next) => {
+  res.render('home');
+});
 
 router.get('/login', (req, res, next) => {
   res.render('login', { message: req.flash('error_msg') });
 });
 
-
-router.post('/login', passport.authenticate('local-signin', {
-  successRedirect: '/home',
-  failureRedirect: '/login',
-  failureFlash: true,
-}));
-
-router.get('/home',ensureAuthenticated, (req, res, next) => {
-  res.render('home');
+router.get("/register", function(req, res) {
+  res.render("register");
 });
 
-router.get('/logout', function(req, res, next) {
-  req.logout(function(err) {
-    if (err) { return next(err); }
-    res.redirect('/');
-  });
-});
+// Auth google
+router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-router.post('/shortUrls', async (req, res) => {
-  await ShortUrl.create({ full: req.body.fullUrl })
-  res.redirect('/home')
-})
-
-router.get('/:shortUrl', async (req, res) => {
-  const shortUrl = await ShortUrl.findOne({ short: req.params.shortUrl })
-  if (shortUrl == null) return res.render('404')
-  shortUrl.clicks++
-  shortUrl.save()
-
-  res.redirect(shortUrl.full)
-})
+// Callback
+router.get(
+  '/auth/google/mapa',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  function(req, res) {
+    const isAuthenticated = req.isAuthenticated();
+    res.render('mapa', { isAuthenticated });
+  }
+);
 
 router.get('*', (req, res) => {
-  res.render('404')
-})
-
+  res.render('404');
+});
 
 module.exports = router;

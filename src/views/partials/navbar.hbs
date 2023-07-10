@@ -1,11 +1,13 @@
 <nav class="navbar">
   <div class="container d-flex justify-content-between">
-    <a href="/" >
-      GeoBikes <i class="fa-solid fa-bicycle"></i>
+    <a href="/">
+      GeoBikes <i class="fa-solid fa-bicycle mb-3"></i>
     </a>
 
     <div class="col-6 d-flex justify-content-end align-items-center">
-      <a class="btn btn-md btn-outline-light" href="login">Sign up</a>
+      {{#unless isAuthenticated}}
+        <a class="btn btn-md btn-outline-light" href="/auth/google">Sign up</a>
+      {{/unless}}
     </div>
   </div>
 </nav>
