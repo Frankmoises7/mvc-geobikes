@@ -5,7 +5,7 @@
 const map = L.map("map").setView([-33.45694, -70.64827], 9);
 
 //Formato del Mapa (Como se vera el mapa.. hay varios layer)
-const tileURL = "https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png";
+const tileURL = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 
 //Agregando el tema al mapa
 L.tileLayer(tileURL).addTo(map);
