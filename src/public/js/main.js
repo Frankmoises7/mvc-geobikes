@@ -1,5 +1,3 @@
-//const { Map, Marker, MarkerClusterGroup, Icon, icon } = require('leaflet');
-
 
 //Iniciacion del mapa (recuerda que debe existir el div con id map)
 const map = L.map("map").setView([-33.45694, -70.64827], 9);
@@ -9,16 +7,6 @@ const tileURL = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 
 //Agregando el tema al mapa
 L.tileLayer(tileURL).addTo(map);
-
-
-
-/* const boton = document.getElementById('login');
-boton.addEventListener('click', () => {
-    // Redirecciona al usuario a la URL deseada
-    //todo : aqui hay una problema de redireccionamiento
-    window.location.href = 'http://localhost:3001/auth/google';
-}); */
-
 
     const api_url= 'https://geobikesapi.onrender.com/api/talleres'
 
@@ -60,11 +48,14 @@ async function fetchData() {
     }
 }
 
+//LAMADA A API DE TALLERES
 fetchData()
+
+//FUNCION PARA SETEAR LA POSICION
 addCurrentLocationToMap();
 
 
-
+//AGREGAR EL CONTROL DEL MAPA
 const searchControl = L.esri.Geocoding.geosearch({
     providers: [
         L.esri.Geocoding.arcgisOnlineProvider({
