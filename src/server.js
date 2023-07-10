@@ -47,8 +47,9 @@ mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopol
 
 
 // Rutas de controladores
-app.use('/', homeController);
 app.use('/', authController);
+app.use('/', homeController);
+
 
 
 // Iniciar el servidor
