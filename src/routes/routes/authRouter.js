@@ -1,6 +1,6 @@
 const authRouter = require('express').Router()
-const { login, register} = require('../controllers/auth')
-const { login_google} = require('../controllers/auth')
+const { login, register} = require('../../controllers/auth')
+const { login_google} = require('../../controllers/auth')
 const passport = require("passport")
 
 authRouter.get("/login/failed" ,(req,res)=>{
