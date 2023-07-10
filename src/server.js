@@ -7,8 +7,7 @@ const passport = require('passport');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 require('dotenv').config();
-const authController = require('./controllers/authController');
-const homeController = require('./controllers/homeController');
+const router = require('./router');
 
 // Inicializaciones
 const app = express();
@@ -35,7 +34,6 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-
 // Conexión a MongoDB
 mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
@@ -45,12 +43,8 @@ mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopol
     console.error('Error al conectar a la base de datos:', err);
   });
 
-
-// Rutas de controladores
-app.use('/', authController);
-app.use('/', homeController);
-
-
+// Rutas
+app.use('/', router);
 
 // Iniciar el servidor
 app.listen(process.env.PORT || 3000, () => {

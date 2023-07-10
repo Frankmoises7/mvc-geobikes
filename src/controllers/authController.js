@@ -1,10 +1,10 @@
-require('dotenv').config();
 const express = require('express');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const router = express.Router();
 const User = require('../models/user');
 
+// Configuración de Passport
 passport.use(User.createStrategy());
 
 passport.serializeUser(function (user, cb) {
@@ -39,6 +39,18 @@ passport.use(
     )
 );
 
+router.get('/', (req, res, next) => {
+    res.render('home');
+});
+
+router.get('/login', (req, res, next) => {
+    res.render('login', { message: req.flash('error_msg') });
+});
+
+router.get("/register", function (req, res) {
+    res.render("register");
+});
+
 router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 router.get(
@@ -50,4 +62,9 @@ router.get(
     }
 );
 
+router.get('*', (req, res) => {
+    res.render('404');
+});
+
 module.exports = router;
+
