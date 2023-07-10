@@ -12,6 +12,10 @@
   "devDependencies": {
     "nodemon": "^2.0.22"
   },
+  "engines": {
+    "node": ">=14 <15"
+  }
+  ,
   "dependencies": {
     "-": "^0.0.1",
     "bcrypt": "^5.1.0",

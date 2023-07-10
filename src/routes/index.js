@@ -20,7 +20,7 @@ app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
 
 router.get('/', (req, res) => {
-  res.render('home')
+  res.render('index')
 })
 
 router.get('/home', ensureAuthenticated, async (req, res) => {
