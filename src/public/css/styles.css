@@ -270,3 +270,13 @@ form .error {
 .form-group {
   margin-bottom: 0.8rem;
 }
+
+.pepo {
+  display: flex;
+}
+
+.img-404 {
+  width: 20vw;
+  margin: auto;
+  margin-top: 30px;
+}
