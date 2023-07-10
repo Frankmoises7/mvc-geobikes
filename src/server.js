@@ -42,7 +42,6 @@ app.use(passport.session());
 //CONEXION A MONGO
 mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true},
   console.log("BD CONECTADA"));
-// solicitudes /////////////////////////////////
 
 
 // routes
