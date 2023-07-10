@@ -1,5 +1,4 @@
-const User = require('../../models/User')
-const { registerSchema } = require('../../validators/userSchema')
+const User = require('../../models/user')
 
 
 async function createUsers(req, res) {

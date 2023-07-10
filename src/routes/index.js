@@ -3,9 +3,6 @@ const express = require('express');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const router = express.Router();
-const passportLocalMongoose = require('passport-local-mongoose');
-const findOrCreate = require('mongoose-findorcreate');
-const mongoose = require('mongoose');
 const User = require('../models/user')
 
 const app = express();

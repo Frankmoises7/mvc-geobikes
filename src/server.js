@@ -1,53 +1,57 @@
 const express = require('express');
 const path = require('path');
-const hbs = require('hbs')
+const hbs = require('hbs');
 const flash = require('connect-flash');
 const session = require('express-session');
 const passport = require('passport');
 const morgan = require('morgan');
-const bodyparser = require('body-parser');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 require('dotenv').config();
+const authController = require('./controllers/authController');
+const homeController = require('./controllers/homeController');
 
-// initializations
+// Inicializaciones
 const app = express();
-app.use(express.static(path.join(__dirname + '/public')));
-app.use(bodyparser.json());
-app.use(bodyparser.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, '/public')));
 
+// Configuración de las vistas
+hbs.registerPartials(path.join(__dirname, 'views', 'partials'));
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'hbs');
 
-// settings
-app.set('port', process.env.PORT || 3000);
-hbs.registerPartials(path.join(__dirname, 'views', 'partials'))
-app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'hbs')
-
-// middlewares
+// Middlewares
 app.use(morgan('dev'));
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 
-
-//Configuracion de la session
+// Configuración de la sesión
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
-  saveUnitialized: true,
-}))
+  saveUninitialized: true,
+}));
 app.use(flash());
 
-// inicializamos passport y sesión.
+// Inicializamos Passport y la sesión
 app.use(passport.initialize());
 app.use(passport.session());
 
-//CONEXION A MONGO
-mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true},
-  console.log("BD CONECTADA"));
+
+// Conexión a MongoDB
+mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log('BD CONECTADA');
+  })
+  .catch((err) => {
+    console.error('Error al conectar a la base de datos:', err);
+  });
 
 
-// routes
-app.use('/', require('./routes/index'));
+// Rutas de controladores
+app.use('/', homeController);
+app.use('/', authController);
 
-// Starting the server
-app.listen(app.get('port'), () => {
-  console.log('server on port', app.get('port'));
+
+// Iniciar el servidor
+app.listen(process.env.PORT || 3000, () => {
+  console.log('Servidor en ejecución en el puerto', process.env.PORT || 3000);
 });
